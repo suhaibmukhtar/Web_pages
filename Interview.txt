@@ -1,0 +1,67 @@
+### **Chatbot Workflow with Retrieval-Augmented Generation (RAG)**
+
+**Overview**: Retrieval-Augmented Generation (RAG) combines two core elements: a retriever and a generator. The retriever first identifies relevant information from a knowledge base, while the generator uses this information to create a coherent response.
+
+1. **User Query**: The user inputs a query or message to the chatbot.
+  
+2. **Retrieval Phase**:
+   - **Retriever Model**: A retriever model (often a dense or sparse retriever like DPR or BM25) fetches relevant documents from a large corpus or knowledge base based on the user query. This retrieval phase ensures the chatbot has accurate and up-to-date information.
+   - **Document Ranking**: The retrieved documents are ranked by relevance, and the most pertinent documents are passed on to the generator.
+
+3. **Generation Phase**:
+   - **Input to Generator**: The generator (usually a transformer-based model like GPT or T5) receives both the user query and the retrieved documents. This augmented context enables the generator to produce a response grounded in relevant knowledge.
+   - **Response Generation**: The generator model synthesizes the information from the retrieved documents, producing a natural language response that is both informative and contextually appropriate.
+
+4. **Response Output**: The generated response is delivered to the user.
+
+5. **Feedback Loop** (optional): User feedback may be used to fine-tune the retriever and generator for improved performance over time.
+
+---
+
+### **Difference Between Stacking and Blending in Ensemble Methods**
+
+**Stacking**:
+- **Definition**: Stacking is an ensemble technique where multiple base models (level-0 models) make predictions that are then fed as input to a meta-model (level-1 model), which makes the final prediction.
+- **Workflow**: Each base model is trained on the full dataset. The predictions of the base models are combined as features to train the meta-model.
+- **Cross-Validation**: Often requires cross-validation to prevent data leakage when creating features for the meta-model.
+- **Strength**: Stacking allows for combining diverse model types (e.g., SVM, decision trees, neural networks) and often yields high performance by leveraging complementary strengths of each model.
+
+**Blending**:
+- **Definition**: Blending is a simpler alternative to stacking, where base models are trained on a training set, and their predictions are combined in a straightforward way (e.g., averaging, weighted sum) to make the final prediction.
+- **Workflow**: Usually involves splitting the data into a training set for the base models and a holdout validation set for blending. Predictions from the holdout set are combined to generate the final output.
+- **Less Complex**: Blending is easier to implement than stacking, as it does not require cross-validation to prevent data leakage.
+- **Strength**: It reduces the risk of overfitting since it operates on a validation set; however, it may not achieve the same performance as stacking in complex tasks.
+
+---
+
+### **Box-Cox and Yeo-Johnson Transformations for Feature Transformation**
+
+**Box-Cox Transformation**:
+The Box-Cox transformation is useful for stabilizing variance and making data more normal-like. It is defined only for positive values.
+
+- **Formula**:
+  \[
+  y(\lambda) = 
+  \begin{cases} 
+      \frac{y^{\lambda} - 1}{\lambda} & \text{if } \lambda \neq 0 \\
+      \ln(y) & \text{if } \lambda = 0 
+  \end{cases}
+  \]
+  
+- **Parameter**: The parameter \(\lambda\) determines the type of transformation (e.g., logarithmic when \(\lambda = 0\), square root for \(\lambda = 0.5\)).
+
+**Yeo-Johnson Transformation**:
+The Yeo-Johnson transformation is similar to Box-Cox but works for both positive and negative values, making it more flexible.
+
+- **Formula**:
+  \[
+  y(\lambda) = 
+  \begin{cases} 
+      \frac{((y + 1)^{\lambda} - 1)}{\lambda} & \text{if } y \geq 0 \text{ and } \lambda \neq 0 \\
+      \ln(y + 1) & \text{if } y \geq 0 \text{ and } \lambda = 0 \\
+      -\frac{((-y + 1)^{2 - \lambda} - 1)}{2 - \lambda} & \text{if } y < 0 \text{ and } \lambda \neq 2 \\
+      -\ln(-y + 1) & \text{if } y < 0 \text{ and } \lambda = 2 
+  \end{cases}
+  \]
+
+Both transformations involve estimating an optimal \(\lambda\) parameter that maximizes the normality of the transformed data. These transformations are frequently used to improve the performance of models by handling skewed distributions.
